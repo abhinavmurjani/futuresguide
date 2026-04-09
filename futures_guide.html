@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Futures Instruments Guide — AbhiFutures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --g:    #C8A951;
+  --gl:   #E8CF7A;
+  --gd:   #8A6B2A;
+  --gf:   rgba(200,169,81,0.07);
+  --gf2:  rgba(200,169,81,0.13);
+  --gline:rgba(200,169,81,0.20);
+  --blk:  #050810;
+  --d1:   #070D1A;
+  --d2:   #060C18;
+  --d3:   #0A1020;
+  --b1:   #0D1E3D;
+  --b2:   #0A1628;
+  --blue: rgba(30,80,180,0.18);
+  --bluef:rgba(20,60,160,0.10);
+  --w:    #F2EDE3;
+  --m:    #706858;
+  --m2:   #4A4236;
+  --red:  #E05555;
+  --green:#4CAF7A;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:#000;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+  padding:32px;
+  font-family:'DM Sans',sans-serif;
+}
+
+/* ─── SLIDE SHELL ─── */
+.slide {
+  position:relative;
+  width:1080px;
+  height:1080px;
+  background:var(--blk);
+  overflow:hidden;
+  flex-shrink:0;
+}
+
+/* GRAIN */
+.slide::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity:0.03;
+  mix-blend-mode:overlay;
+  pointer-events:none;
+  z-index:100;
+}
+
+/* GOLD OUTER FRAME */
+.slide::after {
+  content:'';
+  position:absolute; inset:13px;
+  border:1px solid var(--gline);
+  pointer-events:none;
+  z-index:99;
+}
+
+/* INNER FRAME */
+.inner-frame {
+  position:absolute; inset:18px;
+  border:1px solid rgba(200,169,81,0.06);
+  pointer-events:none;
+  z-index:98;
+}
+
+/* CORNER MARKS */
+.corners {
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:101;
+}
+.corners svg { position:absolute; width:20px; height:20px; }
+.corners svg:nth-child(1) { top:8px;  left:8px; }
+.corners svg:nth-child(2) { top:8px;  right:8px; transform:scaleX(-1); }
+.corners svg:nth-child(3) { bottom:8px; left:8px; transform:scaleY(-1); }
+.corners svg:nth-child(4) { bottom:8px; right:8px; transform:scale(-1,-1); }
+
+/* SIDE ACCENT */
+.side-accent {
+  position:absolute;
+  left:0; top:80px; bottom:80px;
+  width:3px;
+  background:linear-gradient(180deg, transparent, var(--g) 30%, var(--g) 70%, transparent);
+  z-index:50;
+}
+
+/* SECTION TAG */
+.section-tag {
+  font-family:'DM Sans',sans-serif;
+  font-size:8px;
+  letter-spacing:5px;
+  color:var(--g);
+  text-transform:uppercase;
+}
+
+/* PAGE NUMBER */
+.page-num {
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--m2);
+}
+
+/* HANDLE */
+.handle {
+  font-family:'DM Sans',sans-serif;
+  font-size:8px;
+  letter-spacing:3px;
+  color:var(--m2);
+  text-transform:uppercase;
+}
+
+/* DIVIDER */
+.divider {
+  height:1px;
+  background:linear-gradient(90deg, rgba(200,169,81,0.3), transparent);
+}
+
+/* BEBAS headlines */
+.headline { font-family:'Bebas Neue',sans-serif; color:var(--w); line-height:0.95; }
+.gold-text { color:var(--g); }
+.gl-text   { color:var(--gl); }
+
+
+/* ══════════════════════════════
+   SLIDE 1 — COVER
+══════════════════════════════ */
+#s1 .bg-glow-tl {
+  position:absolute; top:-100px; left:-100px;
+  width:600px; height:600px;
+  background:radial-gradient(circle, rgba(20,70,200,0.14) 0%, transparent 70%);
+}
+#s1 .bg-glow-br {
+  position:absolute; bottom:-100px; right:-100px;
+  width:500px; height:500px;
+  background:radial-gradient(circle, rgba(20,70,200,0.11) 0%, transparent 70%);
+}
+#s1 .bg-glow-center {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-55%);
+  width:700px; height:700px;
+  background:radial-gradient(circle, rgba(200,169,81,0.09) 0%, transparent 65%);
+}
+#s1 .content {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:0;
+  z-index:10;
+}
+#s1 .tag-pill {
+  border:1px solid var(--gline);
+  background:var(--gf);
+  padding:7px 22px;
+  border-radius:40px;
+  margin-bottom:44px;
+}
+#s1 .big-title {
+  text-align:center;
+}
+#s1 .big-title .line1 { font-family:'Bebas Neue'; font-size:96px; color:var(--w); letter-spacing:6px; line-height:1; }
+#s1 .big-title .line2 { font-family:'Bebas Neue'; font-size:96px; color:var(--g); letter-spacing:6px; line-height:1; }
+#s1 .big-title .line3 { font-family:'Bebas Neue'; font-size:96px; color:var(--w); letter-spacing:6px; line-height:1; }
+#s1 .subtitle {
+  font-family:'DM Sans'; font-size:16px; color:var(--m);
+  letter-spacing:2px; margin-top:28px; text-align:center;
+}
+#s1 .what-box {
+  position:absolute; bottom:80px; left:80px; right:80px;
+  background:var(--gf);
+  border:1px solid var(--gline);
+  border-radius:8px;
+  padding:22px 28px;
+  z-index:10;
+}
+#s1 .what-box .box-title {
+  font-size:8px; letter-spacing:5px; color:var(--gd); text-transform:uppercase;
+  margin-bottom:14px;
+}
+#s1 .what-items { display:flex; flex-direction:column; gap:8px; }
+#s1 .what-item {
+  display:flex; align-items:center; gap:12px;
+  font-family:'DM Sans'; font-size:12px; color:var(--m);
+}
+#s1 .what-item::before {
+  content:''; width:4px; height:4px; border-radius:50%;
+  background:var(--g); flex-shrink:0;
+}
+#s1 .footer-bar {
+  position:absolute; bottom:28px; left:0; right:0;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 60px;
+  z-index:10;
+}
+
+
+/* ══════════════════════════════
+   SLIDE 2 — CATEGORIES
+══════════════════════════════ */
+#s2 .bg-glow-tr {
+  position:absolute; top:-80px; right:-80px;
+  width:480px; height:480px;
+  background:radial-gradient(circle, rgba(20,70,200,0.13) 0%, transparent 70%);
+}
+#s2 .bg-glow-bl {
+  position:absolute; bottom:-80px; left:-80px;
+  width:400px; height:400px;
+  background:radial-gradient(circle, rgba(20,70,200,0.10) 0%, transparent 70%);
+}
+#s2 .slide-inner {
+  position:absolute; inset:0; z-index:10;
+  padding:52px 64px 52px 80px;
+  display:flex; flex-direction:column;
+}
+#s2 .top-row {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:8px;
+}
+#s2 .slide-headline {
+  font-family:'Bebas Neue'; font-size:54px; color:var(--w);
+  line-height:0.92; letter-spacing:3px; margin-bottom:6px;
+}
+#s2 .slide-headline span { color:var(--g); }
+#s2 .sub-line {
+  font-size:11px; color:var(--m); letter-spacing:1px; margin-bottom:30px;
+}
+#s2 .categories { display:flex; flex-direction:column; gap:12px; flex:1; }
+#s2 .cat-card {
+  background:var(--gf);
+  border:1px solid rgba(200,169,81,0.12);
+  border-left:3px solid var(--g);
+  border-radius:6px;
+  padding:14px 18px;
+  flex:1;
+}
+#s2 .cat-card .cat-title {
+  font-family:'DM Sans'; font-size:10px; font-weight:600; letter-spacing:3px;
+  color:var(--g); text-transform:uppercase; margin-bottom:5px;
+}
+#s2 .cat-card .cat-instruments {
+  font-family:'DM Sans'; font-size:11px; font-weight:600; color:var(--w);
+  margin-bottom:4px;
+}
+#s2 .cat-card .cat-desc {
+  font-family:'DM Sans'; font-size:10px; color:var(--m); line-height:1.4;
+}
+
+
+/* ══════════════════════════════
+   SLIDE 3 — TICK TABLE
+══════════════════════════════ */
+#s3 .bg-glow-mid {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:800px; height:800px;
+  background:radial-gradient(circle, rgba(200,169,81,0.06) 0%, transparent 60%);
+}
+#s3 .slide-inner {
+  position:absolute; inset:0; z-index:10;
+  padding:48px 56px 48px 76px;
+  display:flex; flex-direction:column;
+}
+#s3 .top-row {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:18px;
+}
+#s3 .slide-headline { font-family:'Bebas Neue'; font-size:48px; color:var(--w); letter-spacing:2px; line-height:0.95; }
+#s3 .slide-headline span { color:var(--g); }
+#s3 .tbl { width:100%; border-collapse:collapse; }
+#s3 .tbl thead tr {
+  background:rgba(200,169,81,0.12);
+  border-bottom:1px solid var(--gline);
+}
+#s3 .tbl thead th {
+  font-family:'DM Sans'; font-size:8px; letter-spacing:3px; color:var(--gd);
+  text-transform:uppercase; padding:9px 10px; text-align:left; font-weight:500;
+}
+#s3 .tbl tbody tr { border-bottom:1px solid rgba(200,169,81,0.06); }
+#s3 .tbl tbody tr:nth-child(even) { background:rgba(200,169,81,0.03); }
+#s3 .tbl tbody tr.cat-row td {
+  background:rgba(200,169,81,0.07);
+  font-family:'DM Sans'; font-size:7.5px; letter-spacing:4px; color:var(--gd);
+  text-transform:uppercase; padding:5px 10px; font-weight:600;
+  border-top:1px solid rgba(200,169,81,0.15);
+}
+#s3 .tbl tbody td {
+  font-family:'DM Sans'; font-size:9.5px; color:var(--m); padding:7px 10px;
+}
+#s3 .tbl tbody td:first-child {
+  font-family:'DM Sans'; font-size:10px; font-weight:600; color:var(--w);
+}
+#s3 .tbl tbody td.tv-sym {
+  font-family:'DM Sans'; font-size:10px; font-weight:600; color:var(--gl);
+}
+#s3 .tbl tbody td.tick-val {
+  font-family:'DM Sans'; font-size:10px; font-weight:600; color:var(--w);
+}
+#s3 .note {
+  margin-top:10px;
+  font-family:'DM Sans'; font-size:9px; color:var(--m2);
+  padding-top:8px;
+  border-top:1px solid rgba(200,169,81,0.10);
+}
+
+
+/* ══════════════════════════════
+   SLIDE 4 — ROLLOVER
+══════════════════════════════ */
+#s4 .bg-glow-left {
+  position:absolute; top:50%; left:-100px; transform:translateY(-50%);
+  width:500px; height:700px;
+  background:radial-gradient(circle, rgba(20,70,200,0.13) 0%, transparent 70%);
+}
+#s4 .slide-inner {
+  position:absolute; inset:0; z-index:10;
+  padding:52px 64px 52px 80px;
+  display:flex; flex-direction:column;
+}
+#s4 .top-row {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:10px;
+}
+#s4 .slide-headline { font-family:'Bebas Neue'; font-size:58px; color:var(--w); letter-spacing:3px; line-height:0.92; }
+#s4 .slide-headline span { color:var(--g); }
+#s4 .intro-box {
+  background:var(--gf); border:1px solid rgba(200,169,81,0.12); border-radius:6px;
+  padding:16px 20px; margin-bottom:24px;
+}
+#s4 .intro-box p {
+  font-family:'DM Sans'; font-size:11px; color:var(--m); line-height:1.6;
+}
+#s4 .steps { display:flex; flex-direction:column; gap:12px; }
+#s4 .step {
+  display:flex; gap:18px; align-items:flex-start;
+}
+#s4 .step-num {
+  font-family:'Bebas Neue'; font-size:22px; color:var(--g);
+  line-height:1; min-width:28px; margin-top:2px;
+}
+#s4 .step-content {}
+#s4 .step-title {
+  font-family:'DM Sans'; font-size:11px; font-weight:600; color:var(--w);
+  margin-bottom:3px;
+}
+#s4 .step-desc {
+  font-family:'DM Sans'; font-size:10px; color:var(--m); line-height:1.5;
+}
+#s4 .month-grid {
+  margin-top:18px;
+  background:var(--gf); border:1px solid rgba(200,169,81,0.12);
+  border-radius:6px; padding:14px 18px;
+}
+#s4 .month-grid .grid-title {
+  font-size:8px; letter-spacing:4px; color:var(--gd); text-transform:uppercase;
+  margin-bottom:10px;
+}
+#s4 .month-codes {
+  display:grid; grid-template-columns:repeat(12,1fr); gap:4px;
+}
+#s4 .month-item { text-align:center; }
+#s4 .month-item .code {
+  font-family:'Bebas Neue'; font-size:18px; color:var(--g); line-height:1;
+}
+#s4 .month-item .mon {
+  font-family:'DM Sans'; font-size:8px; color:var(--m2); margin-top:1px;
+}
+#s4 .pro-tip {
+  margin-top:12px;
+  display:flex; gap:10px; align-items:flex-start;
+  background:rgba(76,175,122,0.08); border:1px solid rgba(76,175,122,0.20);
+  border-radius:5px; padding:11px 14px;
+}
+#s4 .pro-tip .tip-label {
+  font-family:'DM Sans'; font-size:8px; font-weight:600; letter-spacing:3px;
+  color:var(--green); white-space:nowrap; text-transform:uppercase;
+}
+#s4 .pro-tip .tip-text {
+  font-family:'DM Sans'; font-size:10px; color:var(--m); line-height:1.5;
+}
+
+
+/* ══════════════════════════════
+   SLIDE 5 — CURRENT CONTRACTS
+══════════════════════════════ */
+#s5 .bg-glow-tr {
+  position:absolute; top:-60px; right:-60px;
+  width:440px; height:440px;
+  background:radial-gradient(circle, rgba(200,169,81,0.08) 0%, transparent 70%);
+}
+#s5 .bg-glow-bl {
+  position:absolute; bottom:-60px; left:-60px;
+  width:380px; height:380px;
+  background:radial-gradient(circle, rgba(20,70,200,0.12) 0%, transparent 70%);
+}
+#s5 .slide-inner {
+  position:absolute; inset:0; z-index:10;
+  padding:48px 56px 48px 76px;
+  display:flex; flex-direction:column;
+}
+#s5 .top-row {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:14px;
+}
+#s5 .slide-headline { font-family:'Bebas Neue'; font-size:50px; color:var(--w); letter-spacing:2px; line-height:0.92; }
+#s5 .slide-headline span { color:var(--g); }
+#s5 .context-pill {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--gf); border:1px solid var(--gline);
+  border-radius:4px; padding:7px 14px; margin-bottom:16px;
+  font-family:'DM Sans'; font-size:10px; color:var(--m);
+}
+#s5 .context-pill .dot {
+  width:6px; height:6px; border-radius:50%; background:var(--green); flex-shrink:0;
+  box-shadow:0 0 6px var(--green);
+}
+#s5 .ctbl { width:100%; border-collapse:collapse; }
+#s5 .ctbl thead tr {
+  background:rgba(200,169,81,0.10);
+  border-bottom:1px solid var(--gline);
+}
+#s5 .ctbl thead th {
+  font-family:'DM Sans'; font-size:8px; letter-spacing:3px; color:var(--gd);
+  text-transform:uppercase; padding:8px 10px; text-align:left; font-weight:500;
+}
+#s5 .ctbl tbody tr { border-bottom:1px solid rgba(200,169,81,0.06); }
+#s5 .ctbl tbody tr:nth-child(even) { background:rgba(200,169,81,0.03); }
+#s5 .ctbl tbody tr.cat-sep td {
+  background:rgba(200,169,81,0.07);
+  font-family:'DM Sans'; font-size:7px; letter-spacing:4px; color:var(--gd);
+  text-transform:uppercase; padding:4px 10px; font-weight:600;
+  border-top:1px solid rgba(200,169,81,0.15);
+}
+#s5 .ctbl tbody td {
+  font-family:'DM Sans'; font-size:9.5px; color:var(--m); padding:6.5px 10px;
+}
+#s5 .ctbl tbody td.sym { font-weight:600; color:var(--w); font-size:10px; }
+#s5 .ctbl tbody td.contract-code {
+  font-family:'DM Sans'; font-size:10px; font-weight:600; color:var(--gl);
+}
+#s5 .ctbl tbody td.tv { font-weight:600; color:var(--green); font-size:10px; }
+#s5 .rollover-warn {
+  margin-top:10px;
+  background:rgba(200,169,81,0.07); border:1px solid rgba(200,169,81,0.18);
+  border-radius:5px; padding:10px 14px;
+  display:flex; align-items:flex-start; gap:10px;
+}
+#s5 .rollover-warn .warn-label {
+  font-size:8px; letter-spacing:3px; color:var(--g); font-weight:600;
+  text-transform:uppercase; white-space:nowrap;
+}
+#s5 .rollover-warn .warn-text {
+  font-size:9.5px; color:var(--m); line-height:1.5;
+}
+
+
+/* ══════════════════════════════
+   SLIDE 6 — CTA
+══════════════════════════════ */
+#s6 .bg-glow-center {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:900px; height:900px;
+  background:radial-gradient(circle, rgba(200,169,81,0.08) 0%, transparent 55%);
+}
+#s6 .bg-glow-tl {
+  position:absolute; top:-80px; left:-80px;
+  width:500px; height:500px;
+  background:radial-gradient(circle, rgba(20,70,200,0.13) 0%, transparent 70%);
+}
+#s6 .bg-glow-br {
+  position:absolute; bottom:-80px; right:-80px;
+  width:420px; height:420px;
+  background:radial-gradient(circle, rgba(20,70,200,0.10) 0%, transparent 70%);
+}
+#s6 .content {
+  position:absolute; inset:0; z-index:10;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:80px;
+  gap:0;
+}
+#s6 .cta-tag {
+  font-size:8px; letter-spacing:5px; color:var(--gd); text-transform:uppercase;
+  margin-bottom:24px;
+}
+#s6 .cta-headline {
+  font-family:'Bebas Neue'; font-size:72px; color:var(--w);
+  letter-spacing:5px; line-height:0.9; text-align:center;
+  margin-bottom:8px;
+}
+#s6 .cta-headline span { color:var(--g); }
+#s6 .cta-sub {
+  font-family:'DM Sans'; font-size:13px; color:var(--m);
+  text-align:center; margin-bottom:36px; line-height:1.6;
+}
+#s6 .firms { display:flex; flex-direction:column; gap:12px; width:100%; max-width:600px; margin-bottom:32px; }
+#s6 .firm-card {
+  background:var(--gf); border:1px solid rgba(200,169,81,0.15);
+  border-radius:8px; padding:16px 22px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+#s6 .firm-name {
+  font-family:'DM Sans'; font-size:11px; font-weight:600; color:var(--w);
+  letter-spacing:1px;
+}
+#s6 .firm-disc { font-family:'DM Sans'; font-size:10px; color:var(--m); margin-top:2px; }
+#s6 .firm-code {
+  font-family:'Bebas Neue'; font-size:28px; letter-spacing:6px; color:var(--gl);
+}
+#s6 .handle-row {
+  display:flex; align-items:center; gap:12px;
+}
+#s6 .divider-h {
+  width:40px; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(200,169,81,0.3));
+}
+#s6 .divider-h.right {
+  background:linear-gradient(90deg, rgba(200,169,81,0.3), transparent);
+}
+#s6 .big-handle {
+  font-family:'Bebas Neue'; font-size:36px; letter-spacing:6px; color:var(--g);
+}
+#s6 .disclaimer {
+  position:absolute; bottom:36px; left:0; right:0;
+  text-align:center; padding:0 80px;
+  font-family:'Playfair Display'; font-style:italic;
+  font-size:9px; color:var(--m2); line-height:1.5;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SLIDE 1 — COVER ══════════════ -->
+<div class="slide" id="s1">
+  <div class="bg-glow-tl"></div>
+  <div class="bg-glow-br"></div>
+  <div class="bg-glow-center"></div>
+  <div class="inner-frame"></div>
+  <div class="side-accent"></div>
+  <div class="corners">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+  </div>
+
+  <div class="content">
+    <div class="tag-pill">
+      <span class="section-tag">AbhiFutures Free Guide</span>
+    </div>
+    <div class="big-title">
+      <div class="line1">FUTURES</div>
+      <div class="line2">INSTRUMENTS</div>
+      <div class="line3">GUIDE</div>
+    </div>
+    <div class="subtitle">Tick Sizes &nbsp;·&nbsp; TradingView Symbols &nbsp;·&nbsp; Contract Rollover</div>
+  </div>
+
+  <div class="what-box">
+    <div class="box-title">What's Inside</div>
+    <div class="what-items">
+      <div class="what-item">All tradeable futures instruments with tick sizes &amp; dollar values</div>
+      <div class="what-item">TradingView symbols for every instrument</div>
+      <div class="what-item">What is contract rollover &amp; why it matters</div>
+      <div class="what-item">Current active contracts — April 2026</div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span class="handle">@abhifutures</span>
+    <span class="page-num">01 / 06</span>
+  </div>
+</div>
+
+
+<!-- ══════════════ SLIDE 2 — CATEGORIES ══════════════ -->
+<div class="slide" id="s2">
+  <div class="bg-glow-tr"></div>
+  <div class="bg-glow-bl"></div>
+  <div class="inner-frame"></div>
+  <div class="side-accent"></div>
+  <div class="corners">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+  </div>
+
+  <div class="slide-inner">
+    <div class="top-row">
+      <span class="section-tag">Section 01</span>
+      <span class="page-num">02 / 06</span>
+    </div>
+    <div class="slide-headline">What Can You<br><span>Trade</span> in Futures?</div>
+    <div class="sub-line">Five major categories — each with its own behaviour and characteristics</div>
+    <div class="divider" style="margin-bottom:20px;"></div>
+
+    <div class="categories">
+      <div class="cat-card">
+        <div class="cat-title">▶ Equity Index Futures</div>
+        <div class="cat-instruments">NQ · ES · YM · RTY &nbsp;|&nbsp; Micros: MNQ · MES · MYM · M2K</div>
+        <div class="cat-desc">Trade the overall movement of the US stock market. Micros are 1/10th the contract size — perfect for smaller accounts &amp; beginners.</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-title">▶ Commodity Futures</div>
+        <div class="cat-instruments">CL (Crude Oil) · GC (Gold) · SI (Silver) · NG (Natural Gas)</div>
+        <div class="cat-desc">Trade raw materials. Heavily influenced by geopolitical events, supply/demand data, and macro news cycles.</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-title">▶ Currency / Forex Futures</div>
+        <div class="cat-instruments">6E (Euro) · 6B (GBP) · 6J (Yen) · 6A (AUD)</div>
+        <div class="cat-desc">Trade major currency pairs via CME — regulated, centralized, no broker requoting. Cleaner fills than spot forex.</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-title">▶ Interest Rate / Bond Futures</div>
+        <div class="cat-instruments">ZB (30yr Bond) · ZN (10yr Note) · ZF (5yr Note)</div>
+        <div class="cat-desc">Driven by Fed policy, inflation data, and Treasury auctions. Correlated with equity indices on risk-off days.</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-title">▶ Crypto Futures (CME)</div>
+        <div class="cat-instruments">BTC · ETH · MBT (Micro Bitcoin) · MET (Micro Ether)</div>
+        <div class="cat-desc">Regulated crypto exposure via CME. Cash settled. Same volatility, no wallet/custody risk.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+      <span class="handle">@abhifutures</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════ SLIDE 3 — TICK TABLE ══════════════ -->
+<div class="slide" id="s3">
+  <div class="bg-glow-mid"></div>
+  <div class="inner-frame"></div>
+  <div class="side-accent"></div>
+  <div class="corners">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+  </div>
+
+  <div class="slide-inner">
+    <div class="top-row">
+      <div>
+        <div class="section-tag" style="margin-bottom:4px;">Section 02</div>
+        <div class="slide-headline">Tick Size · Tick Value<br><span>TradingView</span> Symbols</div>
+      </div>
+      <span class="page-num">03 / 06</span>
+    </div>
+    <div class="divider" style="margin-bottom:12px;"></div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Instrument</th>
+          <th>Exchange</th>
+          <th>Tick Size</th>
+          <th>Tick Value</th>
+          <th>TV Symbol</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cat-row"><td colspan="6">— Equity Indices —</td></tr>
+        <tr><td>NQ</td><td>E-mini Nasdaq 100</td><td>CME</td><td>0.25 pts</td><td class="tick-val">$5.00</td><td class="tv-sym">NQ1!</td></tr>
+        <tr><td>MNQ</td><td>Micro E-mini Nasdaq</td><td>CME</td><td>0.25 pts</td><td class="tick-val">$0.50</td><td class="tv-sym">MNQ1!</td></tr>
+        <tr><td>ES</td><td>E-mini S&amp;P 500</td><td>CME</td><td>0.25 pts</td><td class="tick-val">$12.50</td><td class="tv-sym">ES1!</td></tr>
+        <tr><td>MES</td><td>Micro E-mini S&amp;P 500</td><td>CME</td><td>0.25 pts</td><td class="tick-val">$1.25</td><td class="tv-sym">MES1!</td></tr>
+        <tr><td>YM</td><td>E-mini Dow Jones</td><td>CBOT</td><td>1 pt</td><td class="tick-val">$5.00</td><td class="tv-sym">YM1!</td></tr>
+        <tr><td>MYM</td><td>Micro E-mini Dow</td><td>CBOT</td><td>1 pt</td><td class="tick-val">$0.50</td><td class="tv-sym">MYM1!</td></tr>
+        <tr><td>RTY</td><td>E-mini Russell 2000</td><td>CME</td><td>0.10 pts</td><td class="tick-val">$5.00</td><td class="tv-sym">RTY1!</td></tr>
+        <tr><td>M2K</td><td>Micro E-mini Russell</td><td>CME</td><td>0.10 pts</td><td class="tick-val">$0.50</td><td class="tv-sym">M2K1!</td></tr>
+        <tr class="cat-row"><td colspan="6">— Commodities —</td></tr>
+        <tr><td>CL</td><td>Crude Oil WTI</td><td>NYMEX</td><td>$0.01/bbl</td><td class="tick-val">$10.00</td><td class="tv-sym">CL1!</td></tr>
+        <tr><td>GC</td><td>Gold</td><td>COMEX</td><td>$0.10/oz</td><td class="tick-val">$10.00</td><td class="tv-sym">GC1!</td></tr>
+        <tr><td>SI</td><td>Silver</td><td>COMEX</td><td>$0.005/oz</td><td class="tick-val">$25.00</td><td class="tv-sym">SI1!</td></tr>
+        <tr class="cat-row"><td colspan="6">— Currencies · Bonds · Crypto —</td></tr>
+        <tr><td>6E</td><td>Euro FX</td><td>CME</td><td>0.00005</td><td class="tick-val">$6.25</td><td class="tv-sym">6E1!</td></tr>
+        <tr><td>ZB</td><td>30-Year T-Bond</td><td>CBOT</td><td>1/32 pt</td><td class="tick-val">$31.25</td><td class="tv-sym">ZB1!</td></tr>
+        <tr><td>BTC</td><td>Bitcoin Futures</td><td>CME</td><td>5 pts</td><td class="tick-val">$25.00</td><td class="tv-sym">BTC1!</td></tr>
+        <tr><td>MBT</td><td>Micro Bitcoin</td><td>CME</td><td>5 pts</td><td class="tick-val">$2.50</td><td class="tv-sym">MBT1!</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      Tick = smallest possible price movement &nbsp;·&nbsp; Tick Value = $ gained or lost per tick &nbsp;·&nbsp; Use "1!" suffix on TradingView for the continuous front-month chart
+    </div>
+
+    <div style="display:flex;justify-content:space-between;margin-top:8px;">
+      <span class="handle">@abhifutures</span>
+      <span class="page-num">03 / 06</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════ SLIDE 4 — ROLLOVER ══════════════ -->
+<div class="slide" id="s4">
+  <div class="bg-glow-left"></div>
+  <div class="inner-frame"></div>
+  <div class="side-accent"></div>
+  <div class="corners">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+  </div>
+
+  <div class="slide-inner">
+    <div class="top-row">
+      <span class="section-tag">Section 03</span>
+      <span class="page-num">04 / 06</span>
+    </div>
+    <div class="slide-headline">What is<br><span>Contract</span> Rollover?</div>
+    <div class="divider" style="margin:10px 0 14px;"></div>
+
+    <div class="intro-box">
+      <p>Futures contracts have an expiration date. When that date approaches, traders "roll over" to the next contract — closing the current position and opening the same trade in the newer, further-dated contract. Volume is your signal.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Contracts have a fixed expiry</div>
+          <div class="step-desc">E.g. NQ June 2026 expires on the 3rd Friday of June 2026. Trading ends, cash settlement begins.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Volume shifts ~1 week before expiry</div>
+          <div class="step-desc">Open interest and volume in the current contract drops sharply. The next contract starts receiving all the flow.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">Price gaps appear on non-continuous charts</div>
+          <div class="step-desc">If you're on NQM26 (specific contract), you'll see a gap when the new contract opens. Always use NQ1! on TradingView.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="month-grid">
+      <div class="grid-title">Contract Month Codes</div>
+      <div class="month-codes">
+        <div class="month-item"><div class="code">F</div><div class="mon">Jan</div></div>
+        <div class="month-item"><div class="code">G</div><div class="mon">Feb</div></div>
+        <div class="month-item"><div class="code">H</div><div class="mon">Mar</div></div>
+        <div class="month-item"><div class="code">J</div><div class="mon">Apr</div></div>
+        <div class="month-item"><div class="code">K</div><div class="mon">May</div></div>
+        <div class="month-item"><div class="code">M</div><div class="mon">Jun</div></div>
+        <div class="month-item"><div class="code">N</div><div class="mon">Jul</div></div>
+        <div class="month-item"><div class="code">Q</div><div class="mon">Aug</div></div>
+        <div class="month-item"><div class="code">U</div><div class="mon">Sep</div></div>
+        <div class="month-item"><div class="code">V</div><div class="mon">Oct</div></div>
+        <div class="month-item"><div class="code">X</div><div class="mon">Nov</div></div>
+        <div class="month-item"><div class="code">Z</div><div class="mon">Dec</div></div>
+      </div>
+    </div>
+
+    <div class="pro-tip">
+      <span class="tip-label">Pro Tip</span>
+      <span class="tip-text">Always use NQ1!, ES1!, YM1! etc. on TradingView — the "1!" suffix automatically loads the front-month contract. No manual switching needed at rollover.</span>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+      <span class="handle">@abhifutures</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════ SLIDE 5 — CURRENT CONTRACTS ══════════════ -->
+<div class="slide" id="s5">
+  <div class="bg-glow-tr"></div>
+  <div class="bg-glow-bl"></div>
+  <div class="inner-frame"></div>
+  <div class="side-accent"></div>
+  <div class="corners">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+  </div>
+
+  <div class="slide-inner">
+    <div class="top-row">
+      <div>
+        <div class="section-tag" style="margin-bottom:4px;">Section 04</div>
+        <div class="slide-headline">Current Active<br><span>Contracts</span> — April 2026</div>
+      </div>
+      <span class="page-num">05 / 06</span>
+    </div>
+
+    <div class="context-pill">
+      <span class="dot"></span>
+      March 2026 contracts expired mid-March &nbsp;·&nbsp; We are now in the <strong style="color:var(--gl);margin:0 3px;">JUNE 2026</strong> cycle for equity indices
+    </div>
+
+    <table class="ctbl">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Instrument</th>
+          <th>Active Contract</th>
+          <th>Expiry Date</th>
+          <th>TV Symbol</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cat-sep"><td colspan="5">— Equity Indices —</td></tr>
+        <tr><td class="sym">NQ</td><td>E-mini Nasdaq 100</td><td class="contract-code">NQM26</td><td>Jun 20, 2026</td><td class="tv">NQ1!</td></tr>
+        <tr><td class="sym">ES</td><td>E-mini S&amp;P 500</td><td class="contract-code">ESM26</td><td>Jun 20, 2026</td><td class="tv">ES1!</td></tr>
+        <tr><td class="sym">YM</td><td>Dow Jones Futures</td><td class="contract-code">YMM26</td><td>Jun 20, 2026</td><td class="tv">YM1!</td></tr>
+        <tr><td class="sym">RTY</td><td>Russell 2000 Futures</td><td class="contract-code">RTYM26</td><td>Jun 20, 2026</td><td class="tv">RTY1!</td></tr>
+        <tr><td class="sym">MNQ</td><td>Micro Nasdaq</td><td class="contract-code">MNQM26</td><td>Jun 20, 2026</td><td class="tv">MNQ1!</td></tr>
+        <tr><td class="sym">MES</td><td>Micro S&amp;P 500</td><td class="contract-code">MESM26</td><td>Jun 20, 2026</td><td class="tv">MES1!</td></tr>
+        <tr class="cat-sep"><td colspan="5">— Commodities —</td></tr>
+        <tr><td class="sym">CL</td><td>Crude Oil WTI</td><td class="contract-code">CLM26</td><td>May 20, 2026</td><td class="tv">CL1!</td></tr>
+        <tr><td class="sym">GC</td><td>Gold</td><td class="contract-code">GCM26</td><td>May 28, 2026</td><td class="tv">GC1!</td></tr>
+        <tr><td class="sym">SI</td><td>Silver</td><td class="contract-code">SIM26</td><td>May 28, 2026</td><td class="tv">SI1!</td></tr>
+        <tr class="cat-sep"><td colspan="5">— Currencies · Bonds · Crypto —</td></tr>
+        <tr><td class="sym">6E</td><td>Euro FX</td><td class="contract-code">6EM26</td><td>Jun 16, 2026</td><td class="tv">6E1!</td></tr>
+        <tr><td class="sym">ZB</td><td>30-Year T-Bond</td><td class="contract-code">ZBM26</td><td>Jun 19, 2026</td><td class="tv">ZB1!</td></tr>
+        <tr><td class="sym">BTC</td><td>Bitcoin Futures</td><td class="contract-code">BTCM26</td><td>May 30, 2026</td><td class="tv">BTC1!</td></tr>
+        <tr><td class="sym">MBT</td><td>Micro Bitcoin</td><td class="contract-code">MBTM26</td><td>May 30, 2026</td><td class="tv">MBT1!</td></tr>
+      </tbody>
+    </table>
+
+    <div class="rollover-warn">
+      <span class="warn-label">Next Rollover</span>
+      <span class="warn-text">Equity indices (NQ, ES, YM, RTY) roll from June → September 2026 around <strong style="color:var(--gl)">Jun 13, 2026</strong>. Watch for volume shifting from M26 to U26 contracts in the first week of June.</span>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;margin-top:8px;">
+      <span class="handle">@abhifutures</span>
+      <span class="page-num">05 / 06</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════ SLIDE 6 — CTA ══════════════ -->
+<div class="slide" id="s6">
+  <div class="bg-glow-center"></div>
+  <div class="bg-glow-tl"></div>
+  <div class="bg-glow-br"></div>
+  <div class="inner-frame"></div>
+  <div class="side-accent"></div>
+  <div class="corners">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+    <svg viewBox="0 0 20 20" fill="none"><path d="M1 9V1H9" stroke="#C8A951" stroke-width="1.2"/></svg>
+  </div>
+
+  <div class="content">
+    <div class="cta-tag">Get Funded &amp; Trade</div>
+    <div class="cta-headline">START YOUR<br><span>FUNDED</span><br>FUTURES JOURNEY</div>
+    <div class="cta-sub">I run 25+ funded accounts simultaneously via TradeSyncer.<br>Use code ABHI at any of these firms:</div>
+
+    <div class="firms">
+      <div class="firm-card">
+        <div>
+          <div class="firm-name">Lucid Trading</div>
+          <div class="firm-disc">Up to 50% off &nbsp;·&nbsp; EOD Trailing Drawdown</div>
+        </div>
+        <div class="firm-code">ABHI</div>
+      </div>
+      <div class="firm-card">
+        <div>
+          <div class="firm-name">MyFundedFutures</div>
+          <div class="firm-disc">Up to 30% off &nbsp;·&nbsp; No activation fees</div>
+        </div>
+        <div class="firm-code">ABHI</div>
+      </div>
+      <div class="firm-card">
+        <div>
+          <div class="firm-name">Apex Trader Funding</div>
+          <div class="firm-disc">Up to 85% off &nbsp;·&nbsp; Largest funded firm</div>
+        </div>
+        <div class="firm-code">ABHI</div>
+      </div>
+    </div>
+
+    <div class="handle-row">
+      <div class="divider-h right"></div>
+      <div class="big-handle">@ABHIFUTURES</div>
+      <div class="divider-h"></div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Not financial advice. Futures trading involves significant risk of loss. Trade only what you can afford to lose.
+  </div>
+</div>
+
+</body>
+</html>
